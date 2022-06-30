@@ -7,12 +7,13 @@ export async function signUp(req,res){
 
     const cleansedRegister = res.locals.cleansedRegister;
 
-    console.log(cleansedRegister)
-    console.log(res.locals.cleansedRegister)
-
     const passwordHash = bcrypt.hashSync(password,10);
 
     try {
+        const checkRegister = await db.collection('users').findOne({email:cleansedRegister.email});
+        
+        if(checkRegister) return res.status(400).send('this email is already registered!');
+
         await db.collection('users').insertOne({...cleansedRegister, password: passwordHash});
         res.status(200).send('OK');
     }catch(error){

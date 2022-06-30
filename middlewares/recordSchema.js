@@ -6,7 +6,7 @@ export default async function recordSchema(req,res,next){
     let newPrice = parseFloat(price).toFixed(2);
 
     if(recordControl){
-        newPrice = -1*parseFloat(price).toFixed(2);
+        newPrice = (-1)*parseFloat(price).toFixed(2);
     }
 
     const recordScheme = joi.object({
@@ -25,7 +25,7 @@ export default async function recordSchema(req,res,next){
         return res.status(422).send(error.details.map(detail => detail.message));
     };
 
-    res.locals.cleansedScheme = cleansedSchema;
+    res.locals.cleansedSchema = cleansedSchema;
 
     next();
 }
