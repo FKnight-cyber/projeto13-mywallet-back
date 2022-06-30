@@ -15,7 +15,7 @@ export async function getRecords(_,res){
             records,
             balance: user.balance
         }
-        
+
         res.status(201).send(data);
     }catch(error){
         res.status(422).send("It was not possible to get the records!",error);
@@ -34,7 +34,7 @@ export async function addRecord(_,res){
         const user = await db.collection('users').findOne({_id: session.userId});
         if(!session) return res.status(400).send("User not found!");
 
-        const newBalance = user.balance + cleansedSchema.price;
+        const newBalance = parseFloat(parseFloat(user.balance) + parseFloat(cleansedSchema.price)).toFixed(2);
 
         await db.collection('users').updateOne({_id: session.userId},{$set:{balance:newBalance}});
 

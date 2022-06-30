@@ -3,15 +3,15 @@ import joi from 'joi';
 
 export default async function recordSchema(req,res,next){
     const { price, description, recordControl } = req.body
-    let newPrice = parseInt(price);
+    let newPrice = parseFloat(price).toFixed(2);
 
     if(recordControl){
-        newPrice = -1*parseInt(price);
+        newPrice = -1*parseFloat(price).toFixed(2);
     }
 
     const recordScheme = joi.object({
         price: joi.number().required(),
-        description: joi.string().max(20).required()
+        description: joi.string().max(30).required()
     });
 
     const cleansedSchema = {
