@@ -11,7 +11,7 @@ export default async function recordSchema(req,res,next){
 
     const recordScheme = joi.object({
         price: joi.number().required(),
-        description: joi.string().max(30).required()
+        description: joi.string().max(26).required()
     });
 
     const cleansedSchema = {

@@ -4,10 +4,10 @@ export async function getRecords(_,res){
     const { token } = res.locals;
     try{
         const session = await db.collection('sessions').findOne({token});
-        if(!session) return res.status(400).send("Invalid session!");
+        if(!session) return res.status(498).send({message:"Invalid session!"});
 
         const user = await db.collection('users').findOne({_id: session.userId});
-        if(!session) return res.status(400).send("User not found!");
+        if(!session) return res.status(404).send({message:"User not found!"});
 
         const records = await db.collection('records').find({email: user.email}).toArray();
 
@@ -18,7 +18,7 @@ export async function getRecords(_,res){
 
         res.status(201).send(data);
     }catch(error){
-        res.status(422).send("It was not possible to get the records!",error);
+        res.status(500).send({message:"error occurred!",error});
     }
 };
 
@@ -29,10 +29,10 @@ export async function addRecord(_,res){
     
     try {
         const session = await db.collection('sessions').findOne({token});
-        if(!session) return res.status(400).send("Invalid session!");
+        if(!session) return res.status(498).send({message:"Invalid session!"});
 
         const user = await db.collection('users').findOne({_id: session.userId});
-        if(!session) return res.status(400).send("User not found!");
+        if(!session) return res.status(404).send({message:"User not found!"});
 
         const newBalance = parseFloat(parseFloat(user.balance) + parseFloat(cleansedSchema.price)).toFixed(2);
 
@@ -44,9 +44,9 @@ export async function addRecord(_,res){
             email:user.email,
             time: Date.now()
         });
-        res.status(201).send('record added successfuly')
+        res.status(201).send({message:"record added successfuly"})
     }catch(error){
-        res.status(422).send("It was not possible to add the record!",error);
+        res.status(500).send({message:"error occurred!",error});
     }
 };
 
@@ -56,10 +56,10 @@ export async function removeRecord(req,res){
 
     try {
         const session = await db.collection('sessions').findOne({token});
-        if(!session) return res.status(400).send("Invalid session!");
+        if(!session) return res.status(498).send({message:"Invalid session!"});
 
         const user = await db.collection('users').findOne({_id: session.userId});
-        if(!session) return res.status(400).send("User not found!");
+        if(!session) return res.status(404).send({message:"User not found!"});
 
         let records = await db.collection('records').find({email: user.email}).toArray();
         
@@ -77,9 +77,9 @@ export async function removeRecord(req,res){
             balance: newBalance
         }
 
-        res.status(200).send(data);
+        res.status(201).send(data);
     }catch(error){
-        return res.sendStatus(400);
+        res.status(500).send({message:"error occurred!",error});
     }
 };
 
@@ -90,10 +90,10 @@ export async function updateRecord(req,res){
 
     try {
         const session = await db.collection('sessions').findOne({token});
-        if(!session) return res.status(400).send("Invalid session!");
+        if(!session) return res.status(498).send({message:"Invalid session!"});
 
         const user = await db.collection('users').findOne({_id: session.userId});
-        if(!session) return res.status(400).send("User not found!");
+        if(!session) return res.status(404).send({message:"User not found!"});
 
         let records = await db.collection('records').find({email: user.email}).toArray();
   
@@ -115,8 +115,8 @@ export async function updateRecord(req,res){
             records,
             balance: newBalance
         }
-        res.status(200).send(data);
+        res.status(201).send(data);
     }catch(error){
-        return res.sendStatus(400);
+        res.status(500).send({message:"error occurred!",error});
     }
 };

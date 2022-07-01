@@ -12,12 +12,12 @@ export async function signUp(req,res){
     try {
         const checkRegister = await db.collection('users').findOne({email:cleansedRegister.email});
         
-        if(checkRegister) return res.status(400).send('this email is already registered!');
+        if(checkRegister) return res.status(404).send({message:'this email is already registered!'});
 
         await db.collection('users').insertOne({...cleansedRegister, password: passwordHash});
-        res.status(200).send('OK');
+        res.status(201).send('Successfully registered!');
     }catch(error){
-        res.status(422).send("It was not possible to register the user!",error);
+        res.status(500).send({message: `error occurred: ${error}`})
     }
 };
 
@@ -34,17 +34,16 @@ export async function signIn(req,res){
                 userId: checkUser._id
             });
 
-            res.status(200).send({
+            res.status(202).send({
                 user: checkUser.name,
                 hasRegister:true,
                 token
             });
         }else{
             return res.status(404)
-            .send(`There's no account registered with this ${user} email,
-             register your account and try again!`);
+            .send(`There's no account registered with this email, register your account and try again!`);
         }
     }catch(error){
-        res.status(422).send({messageError: `error occurred: ${error}`})
+        res.status(500).send({message: `error occurred: ${error}`})
     }
 };
