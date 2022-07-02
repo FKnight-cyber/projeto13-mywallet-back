@@ -52,8 +52,7 @@ export async function addRecord(_,res){
 
 export async function removeRecord(req,res){
     const { token } = res.locals;
-    console.log(req.params)
-    const {index} = req.params;
+    const { index } = req.params;
 
     try {
         const session = await db.collection('sessions').findOne({token});

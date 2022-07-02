@@ -19,7 +19,7 @@ export default async function recordSchema(req,res,next){
     let newPrice = parseFloat(price).toFixed(2);
 
     if(recordControl){
-        newPrice = (-1)*parseFloat(price).toFixed(2);
+        newPrice = (-1)*newPrice;
     }
 
     const newSchema = {
