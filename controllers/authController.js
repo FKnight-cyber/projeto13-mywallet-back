@@ -10,10 +10,8 @@ export async function signUp(req,res){
     const passwordHash = bcrypt.hashSync(password,10);
 
     try {
-        if(db !== null){
-            const checkRegister = await db.collection('users').findOne({email:cleansedRegister.email});
-            if(checkRegister) return res.status(404).send({message:'this email is already registered!'});
-        }
+        const checkRegister = await db.collection('users').findOne({email:cleansedRegister.email});
+        if(checkRegister) return res.status(404).send({message:'this email is already registered!'});
 
         await db.collection('users').insertOne({...cleansedRegister, password: passwordHash});
         res.status(201).send('Successfully registered!');
