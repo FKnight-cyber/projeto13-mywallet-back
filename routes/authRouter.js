@@ -4,7 +4,7 @@ import registerSchema from '../middlewares/authSchema.js';
 
 const authRouter = Router();
 
-authRouter.post("https://ryan-projeto13-mywallet.herokuapp.com/", signIn);
-authRouter.post("https://ryan-projeto13-mywallet.herokuapp.com/register", registerSchema, signUp);
+authRouter.post("/", signIn);
+authRouter.post("/register", registerSchema, signUp);
 
 export default authRouter;

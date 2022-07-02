@@ -5,9 +5,9 @@ import recordSchema from "../middlewares/recordSchema.js";
 
 const recordsRouter = Router();
 
-recordsRouter.get("https://projeto13-mywallet-front-bay.vercel.app/initialpage", authentication, getRecords);
-recordsRouter.post("https://projeto13-mywallet-front-bay.vercel.app/add", authentication,recordSchema, addRecord);
-recordsRouter.delete("https://projeto13-mywallet-front-bay.vercel.app/initialpage/:index", authentication, removeRecord);
-recordsRouter.put("https://projeto13-mywallet-front-bay.vercel.app/initialpage/edit/:index", authentication, recordSchema, updateRecord);
+recordsRouter.get("/initialpage", authentication, getRecords);
+recordsRouter.post("/add", authentication,recordSchema, addRecord);
+recordsRouter.delete("/:index", authentication, removeRecord);
+recordsRouter.put("/:index", authentication, recordSchema, updateRecord);
 
 export default recordsRouter;
