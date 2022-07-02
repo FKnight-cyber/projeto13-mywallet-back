@@ -3,11 +3,6 @@ import joi from 'joi';
 
 export default async function recordSchema(req,res,next){
     const { price, description, recordControl } = req.body
-    let newPrice = parseFloat(price).toFixed(2);
-
-    if(recordControl){
-        newPrice = (-1)*parseFloat(price).toFixed(2);
-    }
 
     const recordScheme = joi.object({
         price: joi.number().min(0).required(),
@@ -15,17 +10,28 @@ export default async function recordSchema(req,res,next){
     });
 
     const cleansedSchema = {
-        price: newPrice,
+        price: price,
         description: stripHtml(description).result.trim()
     };
 
     const { error } = recordScheme.validate(cleansedSchema);
 
+    let newPrice = parseFloat(price).toFixed(2);
+
+    if(recordControl){
+        newPrice = (-1)*parseFloat(price).toFixed(2);
+    }
+
+    const newSchema = {
+        price: newPrice,
+        description: stripHtml(description).result.trim()
+    }
+
     if(error){
         return res.status(422).send(error.details.map(detail => detail.message));
     };
 
-    res.locals.cleansedSchema = cleansedSchema;
+    res.locals.cleansedSchema = newSchema;
 
     next();
 }
