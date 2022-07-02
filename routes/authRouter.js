@@ -4,7 +4,7 @@ import registerSchema from '../middlewares/authSchema.js';
 
 const authRouter = Router();
 
-authRouter.post("/", signIn);
-authRouter.post("/register", registerSchema, signUp);
+authRouter.post("https://projeto13-mywallet-front-bay.vercel.app/", signIn);
+authRouter.post("https://projeto13-mywallet-front-bay.vercel.app//register", registerSchema, signUp);
 
 export default authRouter;
