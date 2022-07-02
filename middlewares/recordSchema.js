@@ -5,7 +5,7 @@ export default async function recordSchema(req,res,next){
     const { price, description, recordControl } = req.body
 
     const recordScheme = joi.object({
-        price: joi.number().required(),
+        price: joi.number().min(0).required(),
         description: joi.string().max(26).required()
     });
 
