@@ -13,7 +13,7 @@ export default async function authSchema(req,res,next){
 
     const authSchema = joi.object({
         name: joi.string().trim().required(),
-        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        email: joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
         password: joi.string().trim().required(),
         balance: joi.number().required()
     });
