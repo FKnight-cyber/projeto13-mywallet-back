@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import db from "../databases/mongodb.js";
 
 export async function getRecords(_,res){
@@ -28,15 +29,15 @@ export async function addRecord(_,res){
     const cleansedSchema = res.locals.cleansedSchema;
     
     try {
-        const session = await db.collection('sessions').findOne({token});
+        const session = await db.collection('sessions').findOne(token);
         if(!session) return res.status(498).send({message:"Invalid session!"});
 
-        const user = await db.collection('users').findOne({_id: session.userId});
+        const user = await db.collection('users').findOne({_id: new ObjectId(session.userId)});
         if(!session) return res.status(404).send({message:"User not found!"});
 
         const newBalance = parseFloat(parseFloat(user.balance) + parseFloat(cleansedSchema.price)).toFixed(2);
 
-        await db.collection('users').updateOne({_id: session.userId},{$set:{balance:newBalance}});
+        await db.collection('users').updateOne({_id: new ObjectId(session.userId)},{$set:{balance:newBalance}});
 
         await db.collection('records')
         .insertOne({
@@ -55,10 +56,10 @@ export async function removeRecord(req,res){
     const { index } = req.params;
 
     try {
-        const session = await db.collection('sessions').findOne({token});
+        const session = await db.collection('sessions').findOne(token);
         if(!session) return res.status(498).send({message:"Invalid session!"});
 
-        const user = await db.collection('users').findOne({_id: session.userId});
+        const user = await db.collection('users').findOne({_id: new ObjectId(session.userId)});
         if(!session) return res.status(404).send({message:"User not found!"});
 
         let records = await db.collection('records').find({email: user.email}).toArray();
@@ -68,7 +69,7 @@ export async function removeRecord(req,res){
         const newBalance = user.balance - record.price;
 
         await db.collection('records').deleteOne(record);
-        await db.collection('users').updateOne({_id: session.userId},{$set:{balance:newBalance}})
+        await db.collection('users').updateOne({_id: new ObjectId(session.userId)},{$set:{balance:newBalance}})
 
         records = await db.collection('records').find({email: user.email}).toArray();
 
@@ -92,7 +93,7 @@ export async function updateRecord(req,res){
         const session = await db.collection('sessions').findOne({token});
         if(!session) return res.status(498).send({message:"Invalid session!"});
 
-        const user = await db.collection('users').findOne({_id: session.userId});
+        const user = await db.collection('users').findOne({_id: new ObjectId(session.userId)});
         if(!session) return res.status(404).send({message:"User not found!"});
 
         let records = await db.collection('records').find({email: user.email}).toArray();
@@ -101,13 +102,13 @@ export async function updateRecord(req,res){
 
         const newBalance = parseFloat(user.balance) + parseFloat(cleansedSchema.price) - parseFloat(record.price);
 
-        await db.collection('records').updateOne({_id:record._id},{$set:{
+        await db.collection('records').updateOne({_id:new ObjectId(record._id)},{$set:{
             price: cleansedSchema.price,
             description: cleansedSchema.description,
             time: Date.now()
         }});
      
-        await db.collection('users').updateOne({_id: session.userId},{$set:{balance:newBalance}})
+        await db.collection('users').updateOne({_id: new ObjectId(session.userId)},{$set:{balance:newBalance}})
 
         records = await db.collection('records').find({email: user.email}).toArray();
 
