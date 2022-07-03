@@ -7,7 +7,7 @@ const recordsRouter = Router();
 
 recordsRouter.get("/initialpage", authentication, getRecords);
 recordsRouter.post("/add", authentication,recordSchema, addRecord);
-recordsRouter.delete("/:index", authentication, removeRecord);
-recordsRouter.put("/:index", authentication, recordSchema, updateRecord);
+recordsRouter.delete("/initialpage/:index", authentication, removeRecord);
+recordsRouter.put("/initialpage/edit/:idRegister", authentication, recordSchema, updateRecord);
 
 export default recordsRouter;
