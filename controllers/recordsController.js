@@ -85,7 +85,7 @@ export async function removeRecord(req,res){
 
 export async function updateRecord(req,res){
     const { token } = res.locals;
-    const idRegister = req.params.index;
+    const { index } = req.params;
     const cleansedSchema = res.locals.cleansedSchema;
 
     try {
@@ -97,7 +97,7 @@ export async function updateRecord(req,res){
 
         let records = await db.collection('records').find({email: user.email}).toArray();
   
-        const record = records[idRegister];
+        const record = records[index];
 
         const newBalance = parseFloat(user.balance) + parseFloat(cleansedSchema.price) - parseFloat(record.price);
 
